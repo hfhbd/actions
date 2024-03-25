@@ -18,19 +18,19 @@ if (typeof String.prototype.startsWith === 'undefined') {
 //endregion
 (function (root, factory) {
   if (typeof define === 'function' && define.amd)
-    define(['exports', '@actions/github', '@actions/core'], factory);
+    define(['exports', '@actions/core', '@actions/github'], factory);
   else if (typeof exports === 'object')
-    factory(module.exports, require('@actions/github'), require('@actions/core'));
+    factory(module.exports, require('@actions/core'), require('@actions/github'));
   else {
-    if (typeof github === 'undefined') {
-      throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/github' was not found. Please, check whether '@actions/github' is loaded prior to 'actions:setup-version'.");
-    }
     if (typeof core === 'undefined') {
       throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/core' was not found. Please, check whether '@actions/core' is loaded prior to 'actions:setup-version'.");
     }
-    root['actions:setup-version'] = factory(typeof this['actions:setup-version'] === 'undefined' ? {} : this['actions:setup-version'], github, core);
+    if (typeof github === 'undefined') {
+      throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/github' was not found. Please, check whether '@actions/github' is loaded prior to 'actions:setup-version'.");
+    }
+    root['actions:setup-version'] = factory(typeof this['actions:setup-version'] === 'undefined' ? {} : this['actions:setup-version'], core, github);
   }
-}(this, function (_, github, core) {
+}(this, function (_, core, github) {
   'use strict';
   //region block: imports
   var imul = Math.imul;
@@ -55,8 +55,10 @@ if (typeof String.prototype.startsWith === 'undefined') {
   initMetadataForObject(EmptyCoroutineContext, 'EmptyCoroutineContext');
   initMetadataForClass(CoroutineSingletons, 'CoroutineSingletons', VOID, Enum);
   initMetadataForClass(Pair, 'Pair');
-  initMetadataForCoroutine($actionCOROUTINE$0, CoroutineImpl);
-  initMetadataForCoroutine($getLatestVersionAndRefCOROUTINE$1, CoroutineImpl);
+  initMetadataForClass(Outputs, 'Outputs');
+  initMetadataForCoroutine($mainCOROUTINE$0, CoroutineImpl);
+  initMetadataForCoroutine($actionCOROUTINE$1, CoroutineImpl);
+  initMetadataForCoroutine($getLatestVersionAndRefCOROUTINE$2, CoroutineImpl);
   //endregion
   function Number_0() {
   }
@@ -1157,31 +1159,86 @@ if (typeof String.prototype.startsWith === 'undefined') {
     return _this__u8e3s4.getInput(name, this_0);
   }
   function main($completion) {
-    return action($completion);
+    var tmp = new $mainCOROUTINE$0($completion);
+    tmp.u_1 = Unit_instance;
+    tmp.v_1 = null;
+    return tmp.q1();
   }
+  function Outputs(fullTag) {
+    this.r1_1 = fullTag;
+  }
+  protoOf(Outputs).toString = function () {
+    return 'Outputs(fullTag=' + this.r1_1 + ')';
+  };
+  protoOf(Outputs).equals = function (other) {
+    if (this === other)
+      return true;
+    if (!(other instanceof Outputs))
+      return false;
+    var tmp0_other_with_cast = other instanceof Outputs ? other : THROW_CCE();
+    if (!(this.r1_1 === tmp0_other_with_cast.r1_1))
+      return false;
+    return true;
+  };
+  function $mainCOROUTINE$0(resultContinuation) {
+    CoroutineImpl.call(this, resultContinuation);
+  }
+  protoOf($mainCOROUTINE$0).q1 = function () {
+    var suspendResult = this.u_1;
+    $sm: do
+      try {
+        var tmp = this.s_1;
+        switch (tmp) {
+          case 0:
+            this.t_1 = 2;
+            this.s_1 = 1;
+            suspendResult = action(this);
+            if (suspendResult === get_COROUTINE_SUSPENDED()) {
+              return suspendResult;
+            }
+
+            continue $sm;
+          case 1:
+            var outputs = suspendResult;
+            core.setOutput('full-tag', outputs.r1_1);
+            return Unit_instance;
+          case 2:
+            throw this.v_1;
+        }
+      } catch ($p) {
+        var e = $p;
+        if (this.t_1 === 2) {
+          throw e;
+        } else {
+          this.s_1 = this.t_1;
+          this.v_1 = e;
+        }
+      }
+     while (true);
+  };
   function mainWrapper() {
     main(get_EmptyContinuation());
   }
   function action($completion) {
-    var tmp = new $actionCOROUTINE$0($completion);
+    var tmp = new $actionCOROUTINE$1($completion);
     tmp.u_1 = Unit_instance;
     tmp.v_1 = null;
-    return tmp.s1();
+    return tmp.q1();
   }
   function getLatestVersionAndRef(octokit, $completion) {
-    var tmp = new $getLatestVersionAndRefCOROUTINE$1(octokit, $completion);
+    var tmp = new $getLatestVersionAndRefCOROUTINE$2(octokit, $completion);
     tmp.u_1 = Unit_instance;
     tmp.v_1 = null;
-    return tmp.s1();
+    return tmp.q1();
   }
   function action$lambda($this$getInput) {
     $this$getInput.required = true;
     return Unit_instance;
   }
-  function $actionCOROUTINE$0(resultContinuation) {
+  function $actionCOROUTINE$1(resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
   }
-  protoOf($actionCOROUTINE$0).s1 = function () {
+  protoOf($actionCOROUTINE$1).q1 = function () {
     var suspendResult = this.u_1;
     $sm: do
       try {
@@ -1189,16 +1246,16 @@ if (typeof String.prototype.startsWith === 'undefined') {
         switch (tmp) {
           case 0:
             this.t_1 = 3;
-            this.q1_1 = github.context.eventName;
-            if (this.q1_1 === 'release' || this.q1_1 === 'workflow_dispatch') {
+            this.a2_1 = github.context.eventName;
+            if (this.a2_1 === 'release' || this.a2_1 === 'workflow_dispatch') {
               var tmp_0 = this;
               var ref = github.context.ref;
               var version = removePrefix(ref, 'refs/tags/v');
-              tmp_0.r1_1 = to(ref, version);
+              tmp_0.b2_1 = to(ref, version);
               this.s_1 = 2;
               continue $sm;
             } else {
-              if (this.q1_1 === 'schedule') {
+              if (this.a2_1 === 'schedule') {
                 this.s_1 = 1;
                 var tmp_1 = github;
                 var tmp_2 = core;
@@ -1215,16 +1272,16 @@ if (typeof String.prototype.startsWith === 'undefined') {
             }
 
           case 1:
-            this.r1_1 = suspendResult;
+            this.b2_1 = suspendResult;
             this.s_1 = 2;
             continue $sm;
           case 2:
-            var _destruct__k2r9zo = this.r1_1;
+            var _destruct__k2r9zo = this.b2_1;
             var ref_0 = _destruct__k2r9zo.g1();
             var version_0 = _destruct__k2r9zo.h1();
             core.exportVariable('ref', ref_0);
             core.exportVariable('version', version_0);
-            return Unit_instance;
+            return new Outputs('v' + version_0);
           case 3:
             throw this.v_1;
         }
@@ -1239,11 +1296,11 @@ if (typeof String.prototype.startsWith === 'undefined') {
       }
      while (true);
   };
-  function $getLatestVersionAndRefCOROUTINE$1(octokit, resultContinuation) {
+  function $getLatestVersionAndRefCOROUTINE$2(octokit, resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
-    this.b2_1 = octokit;
+    this.k2_1 = octokit;
   }
-  protoOf($getLatestVersionAndRefCOROUTINE$1).s1 = function () {
+  protoOf($getLatestVersionAndRefCOROUTINE$2).q1 = function () {
     var suspendResult = this.u_1;
     $sm: do
       try {
@@ -1252,7 +1309,7 @@ if (typeof String.prototype.startsWith === 'undefined') {
           case 0:
             this.t_1 = 2;
             this.s_1 = 1;
-            suspendResult = this.b2_1.rest.repos.getLatestRelease(github.context.repo.owner, github.context.repo.repo, this);
+            suspendResult = this.k2_1.rest.repos.getLatestRelease(github.context.repo.owner, github.context.repo.repo, this);
             if (suspendResult === get_COROUTINE_SUSPENDED()) {
               return suspendResult;
             }
