@@ -1,11 +1,4 @@
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd)
-    define(['exports'], factory);
-  else if (typeof exports === 'object')
-    factory(module.exports);
-  else
-    root['actions:setup-version'] = factory(typeof this['actions:setup-version'] === 'undefined' ? {} : this['actions:setup-version']);
-}(this, function (_) {
+this['actions:setup-version'] = function (_) {
   'use strict';
   //region block: pre-declaration
   initMetadataForObject(Unit, 'Unit');
@@ -276,6 +269,4 @@
   //endregion
   mainWrapper();
   return _;
-}));
-
-//# sourceMappingURL=actions-setup-version-post.js.map
+}(typeof this['actions:setup-version'] === 'undefined' ? {} : this['actions:setup-version']);

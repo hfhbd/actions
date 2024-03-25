@@ -16,21 +16,13 @@ if (typeof String.prototype.startsWith === 'undefined') {
   }});
 }
 //endregion
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd)
-    define(['exports', '@actions/core', '@actions/github'], factory);
-  else if (typeof exports === 'object')
-    factory(module.exports, require('@actions/core'), require('@actions/github'));
-  else {
-    if (typeof core === 'undefined') {
-      throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/core' was not found. Please, check whether '@actions/core' is loaded prior to 'actions:setup-version'.");
-    }
-    if (typeof github === 'undefined') {
-      throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/github' was not found. Please, check whether '@actions/github' is loaded prior to 'actions:setup-version'.");
-    }
-    root['actions:setup-version'] = factory(typeof this['actions:setup-version'] === 'undefined' ? {} : this['actions:setup-version'], core, github);
-  }
-}(this, function (_, core, github) {
+if (typeof core === 'undefined') {
+  throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/core' was not found. Please, check whether '@actions/core' is loaded prior to 'actions:setup-version'.");
+}
+if (typeof github === 'undefined') {
+  throw new Error("Error loading module 'actions:setup-version'. Its dependency '@actions/github' was not found. Please, check whether '@actions/github' is loaded prior to 'actions:setup-version'.");
+}
+this['actions:setup-version'] = function (_, core, github) {
   'use strict';
   //region block: imports
   var imul = Math.imul;
@@ -1342,6 +1334,4 @@ if (typeof String.prototype.startsWith === 'undefined') {
   //endregion
   mainWrapper();
   return _;
-}));
-
-//# sourceMappingURL=actions-setup-version.js.map
+}(typeof this['actions:setup-version'] === 'undefined' ? {} : this['actions:setup-version'], core, github);
