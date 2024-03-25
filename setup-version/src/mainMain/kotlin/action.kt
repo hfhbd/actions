@@ -8,9 +8,7 @@ suspend fun action(): Outputs {
             ref to version
         }
 
-        "schedule" -> getLatestVersionAndRef(github.getOctokit(core.getInput("GH_TOKEN") {
-            required = true
-        }))
+        "schedule" -> getLatestVersionAndRef(github.getOctokit(github.context.token))
 
         else -> error("Not supported")
     }
