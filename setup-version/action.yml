@@ -8,6 +8,7 @@
   },
   "runs": {
     "using": "node20",
-    "main": "dist/actions-setup-version.js"
+    "main": "dist/actions-setup-version.js",
+    "post": "dist/actions-setup-version-post.js"
   }
 }
