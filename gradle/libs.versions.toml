@@ -1,0 +1,3 @@
+[plugins]
+kotlin-js = { id = "org.jetbrains.kotlin.js", version = "2.0.0-Beta5" }
+kotlin-actions = { id = "app.softwork.kotlin.actions", version = "0.0.1" }
