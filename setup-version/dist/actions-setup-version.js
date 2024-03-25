@@ -1142,14 +1142,6 @@ this['actions:setup-version'] = function (_, core, github) {
   function _UShort___get_data__impl__g0245($this) {
     return $this;
   }
-  function getInput(_this__u8e3s4, name, options) {
-    // Inline function 'kotlin.apply' call
-    // Inline function 'kotlin.js.unsafeCast' call
-    var this_0 = {};
-    // Inline function 'kotlin.contracts.contract' call
-    options(this_0);
-    return _this__u8e3s4.getInput(name, this_0);
-  }
   function main($completion) {
     var tmp = new $mainCOROUTINE$0($completion);
     tmp.u_1 = Unit_instance;
@@ -1223,10 +1215,6 @@ this['actions:setup-version'] = function (_, core, github) {
     tmp.v_1 = null;
     return tmp.q1();
   }
-  function action$lambda($this$getInput) {
-    $this$getInput.required = true;
-    return Unit_instance;
-  }
   function $actionCOROUTINE$1(resultContinuation) {
     CoroutineImpl.call(this, resultContinuation);
   }
@@ -1249,15 +1237,13 @@ this['actions:setup-version'] = function (_, core, github) {
             } else {
               if (this.a2_1 === 'schedule') {
                 this.s_1 = 1;
-                var tmp_1 = github;
-                var tmp_2 = core;
-                suspendResult = getLatestVersionAndRef(tmp_1.getOctokit(getInput(tmp_2, 'GH_TOKEN', action$lambda)), this);
+                suspendResult = getLatestVersionAndRef(github.getOctokit(github.context.token), this);
                 if (suspendResult === get_COROUTINE_SUSPENDED()) {
                   return suspendResult;
                 }
                 continue $sm;
               } else {
-                var tmp_3 = this;
+                var tmp_1 = this;
                 var message = 'Not supported';
                 throw IllegalStateException_init_$Create$_0(toString_1(message));
               }
