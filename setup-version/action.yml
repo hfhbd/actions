@@ -1,0 +1,8 @@
+{
+  "name": "Export version",
+  "description": "Export version based on the ref",
+  "runs": {
+    "using": "node20",
+    "main": "dist/actions-setup-version.js"
+  }
+}

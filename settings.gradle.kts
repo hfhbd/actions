@@ -28,6 +28,6 @@ rootProject.name = "actions"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-include(":foo")
+include(":setup-version")
 
 includeBuild("../kotlin-actions")
