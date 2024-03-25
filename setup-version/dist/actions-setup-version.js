@@ -1227,7 +1227,7 @@ this['actions:setup-version'] = function (_, core, github) {
           case 0:
             this.t_1 = 3;
             this.a2_1 = github.context.eventName;
-            if (this.a2_1 === 'release' || this.a2_1 === 'workflow_dispatch') {
+            if (this.a2_1 === 'release') {
               var tmp_0 = this;
               var ref = github.context.ref;
               var version = removePrefix(ref, 'refs/tags/v');
@@ -1235,17 +1235,26 @@ this['actions:setup-version'] = function (_, core, github) {
               this.s_1 = 2;
               continue $sm;
             } else {
-              if (this.a2_1 === 'schedule') {
-                this.s_1 = 1;
-                suspendResult = getLatestVersionAndRef(github.getOctokit(github.context.token), this);
-                if (suspendResult === get_COROUTINE_SUSPENDED()) {
-                  return suspendResult;
-                }
+              if (this.a2_1 === 'workflow_dispatch') {
+                var tmp_1 = this;
+                var ref_0 = github.context.ref;
+                var version_0 = removePrefix(ref_0, 'refs/tags/v');
+                tmp_1.b2_1 = to(ref_0, version_0 + '.' + github.context.runNumber.toString());
+                this.s_1 = 2;
                 continue $sm;
               } else {
-                var tmp_1 = this;
-                var message = 'Not supported';
-                throw IllegalStateException_init_$Create$_0(toString_1(message));
+                if (this.a2_1 === 'schedule') {
+                  this.s_1 = 1;
+                  suspendResult = getLatestVersionAndRef(github.getOctokit(github.context.token), this);
+                  if (suspendResult === get_COROUTINE_SUSPENDED()) {
+                    return suspendResult;
+                  }
+                  continue $sm;
+                } else {
+                  var tmp_2 = this;
+                  var message = 'Not supported';
+                  throw IllegalStateException_init_$Create$_0(toString_1(message));
+                }
               }
             }
 
@@ -1255,11 +1264,11 @@ this['actions:setup-version'] = function (_, core, github) {
             continue $sm;
           case 2:
             var _destruct__k2r9zo = this.b2_1;
-            var ref_0 = _destruct__k2r9zo.g1();
-            var version_0 = _destruct__k2r9zo.h1();
-            core.exportVariable('ref', ref_0);
-            core.exportVariable('version', version_0);
-            return new Outputs('v' + version_0);
+            var ref_1 = _destruct__k2r9zo.g1();
+            var version_1 = _destruct__k2r9zo.h1();
+            core.exportVariable('ref', ref_1);
+            core.exportVariable('version', version_1);
+            return new Outputs('v' + version_1);
           case 3:
             throw this.v_1;
         }
@@ -1299,7 +1308,7 @@ this['actions:setup-version'] = function (_, core, github) {
             var tagName = ARGUMENT_0.tag_name;
             var version = removePrefix(tagName, 'v');
             var ref = 'refs/tags/v' + tagName;
-            return to(version, ref);
+            return to(ref, version + '.' + github.context.runNumber.toString());
           case 2:
             throw this.v_1;
         }

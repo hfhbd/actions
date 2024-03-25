@@ -2,10 +2,16 @@ import com.github.actions.*
 
 suspend fun action(): Outputs {
     val (ref, version) = when (github.context.eventName) {
-        "release", "workflow_dispatch" -> {
+        "release" -> {
             val ref = github.context.ref
             val version = ref.removePrefix("refs/tags/v")
             ref to version
+        }
+
+        "workflow_dispatch" -> {
+            val ref = github.context.ref
+            val version = ref.removePrefix("refs/tags/v")
+            ref to "$version.${github.context.runNumber}"
         }
 
         "schedule" -> getLatestVersionAndRef(github.getOctokit(github.context.token))
@@ -27,5 +33,5 @@ suspend fun getLatestVersionAndRef(octokit: Octokit): Pair<String, String> {
     )!!.tag_name
     val version = tagName.removePrefix("v")
     val ref = "refs/tags/v$tagName"
-    return version to ref
+    return ref to "$version.${github.context.runNumber}"
 }
