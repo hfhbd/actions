@@ -4,7 +4,7 @@ plugins {
 
 kotlin {
     sourceSets {
-        jsTest {
+        mainTest {
             dependencies {
                 implementation(kotlin("test"))
             }

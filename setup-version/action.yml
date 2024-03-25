@@ -1,8 +1,14 @@
 {
   "name": "Export version",
   "description": "Export version based on the ref",
+  "outputs": {
+    "full-tag": {
+      "description": "The full tag"
+    }
+  },
   "runs": {
     "using": "node20",
-    "main": "dist/actions-setup-version.js"
+    "main": "dist/actions-setup-version.js",
+    "post": "dist/actions-setup-version-post.js"
   }
 }

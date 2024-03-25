@@ -1,6 +1,6 @@
 import com.github.actions.*
 
-suspend fun action() {
+suspend fun action(): Outputs {
     val (ref, version) = when (github.context.eventName) {
         "release", "workflow_dispatch" -> {
             val ref = github.context.ref
@@ -16,6 +16,10 @@ suspend fun action() {
     }
     core.exportVariable("ref", ref)
     core.exportVariable("version", version)
+
+    return Outputs(
+        "v$version"
+    )
 }
 
 suspend fun getLatestVersionAndRef(octokit: Octokit): Pair<String, String> {
