@@ -3,6 +3,6 @@
   "description": "Greet someone and record the time",
   "runs": {
     "using": "node20",
-    "main": "dist/actions.js"
+    "main": "foo/dist/actions.js"
   }
 }
