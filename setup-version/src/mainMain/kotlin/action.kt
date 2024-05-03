@@ -49,7 +49,7 @@ suspend fun getLatestVersionAndRef(
         }
         expectSuccess = true
     }
-    val latestRelease = client.get(" https://api.github.com/repos/${owner}/${repo}/releases/latest") {
+    val latestRelease = client.get("https://api.github.com/repos/${owner}/${repo}/releases/latest") {
         bearerAuth(token)
     }.body<Release>()
 
