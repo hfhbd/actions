@@ -1,6 +1,13 @@
 import com.github.actions.*
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-suspend fun action(): Outputs {
+suspend fun action(token: String): Outputs {
     val (ref, version) = when (github.context.eventName) {
         "release" -> {
             val ref = github.context.ref
@@ -14,7 +21,7 @@ suspend fun action(): Outputs {
             ref to "$version.${github.context.runNumber}"
         }
 
-        "schedule" -> getLatestVersionAndRef(github.getOctokit(github.context.token))
+        "schedule" -> getLatestVersionAndRef(github.context.repo.owner, github.context.repo.repo, token)
 
         else -> error("Not supported")
     }
@@ -22,16 +29,37 @@ suspend fun action(): Outputs {
     core.exportVariable("version", version)
 
     return Outputs(
-        "v$version"
+        fullTag = "v$version"
     )
 }
 
-suspend fun getLatestVersionAndRef(octokit: Octokit): Pair<String, String> {
-    val tagName = octokit.rest.repos.getLatestRelease(
-        owner = github.context.repo.owner,
-        repo = github.context.repo.repo
-    )!!.tag_name
+suspend fun getLatestVersionAndRef(
+    owner: String,
+    repo: String,
+    token: String,
+): Pair<String, String> {
+    val client = HttpClient(JsEsModule) {
+        install(ContentNegotiation) {
+            json(
+                json = Json {
+                    ignoreUnknownKeys = true
+                    useAlternativeNames = false
+                }
+            )
+        }
+        expectSuccess = true
+    }
+    val latestRelease = client.get(" https://api.github.com/repos/${owner}/${repo}/releases/latest") {
+        bearerAuth(token)
+    }.body<Release>()
+
+    val tagName = latestRelease.tag_name
     val version = tagName.removePrefix("v")
     val ref = "refs/tags/v$tagName"
     return ref to "$version.${github.context.runNumber}"
 }
+
+@Serializable
+data class Release(
+    val tag_name: String
+)

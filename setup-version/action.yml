@@ -1,5 +1,11 @@
 {
   "name": "Export version",
+  "inputs": {
+    "token": {
+      "description": "GitHub Token",
+      "required": true
+    }
+  },
   "description": "Export version based on the ref",
   "outputs": {
     "full-tag": {
@@ -8,7 +14,6 @@
   },
   "runs": {
     "using": "node20",
-    "main": "dist/actions-setup-version-main.mjs",
-    "post": "dist/actions-setup-version-post.mjs"
+    "main": "dist/actions-setup-version-main.mjs"
   }
 }

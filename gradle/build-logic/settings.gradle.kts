@@ -11,5 +11,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
-
-includeBuild("../../../kotlin-actions")
