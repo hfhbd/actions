@@ -24,7 +24,7 @@ import web.streams.ReadableStreamReadDoneResult
 import web.streams.ReadableStreamReadValueResult
 import kotlin.coroutines.CoroutineContext
 
-object JsEsModule : HttpClientEngineFactory<HttpClientEngineConfig> {
+object NodeJsEsModule : HttpClientEngineFactory<HttpClientEngineConfig> {
     override fun create(block: HttpClientEngineConfig.() -> Unit): HttpClientEngine =
         JsEsModuleEngine(HttpClientEngineConfig().apply(block))
 }
@@ -74,7 +74,7 @@ private class JsEsModuleEngine(
 }
 
 @OptIn(InternalAPI::class, DelicateCoroutinesApi::class)
-internal suspend fun HttpRequestData.toRaw(
+private suspend fun HttpRequestData.toRaw(
     clientConfig: HttpClientConfig<*>,
     callContext: CoroutineContext
 ): RequestInit {
@@ -107,7 +107,7 @@ internal suspend fun HttpRequestData.toRaw(
     }
 }
 
-internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel {
+private fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel {
     val data = flow {
         val body = response.body ?: error("Fail to get body")
         val reader = body.getReader()

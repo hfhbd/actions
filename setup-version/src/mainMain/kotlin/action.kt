@@ -4,41 +4,44 @@ import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-suspend fun action(token: String): Outputs {
-    val (ref, version) = when (github.context.eventName) {
+suspend fun action(token: String) {
+    val version = when (val event = github.context.eventName) {
         "release" -> {
             val ref = github.context.ref
             val version = ref.removePrefix("refs/tags/v")
-            ref to version
+            version
         }
 
         "workflow_dispatch" -> {
             val ref = github.context.ref
-            val version = ref.removePrefix("refs/tags/v")
-            ref to "$version.${github.context.runNumber}"
+            val version = if (ref.startsWith("refs/heads/main")) {
+                getLatestVersion(github.context.repo.owner, github.context.repo.repo, token)
+            } else if (ref.startsWith("refs/tags/v")){
+                ref.removePrefix("refs/tags/v")
+            } else error("Not supported ref: $ref")
+            "$version.${github.context.runNumber}"
         }
 
-        "schedule" -> getLatestVersionAndRef(github.context.repo.owner, github.context.repo.repo, token)
+        "schedule" -> {
+            val latestVersion = getLatestVersion(github.context.repo.owner, github.context.repo.repo, token)
+            "$latestVersion.${github.context.runNumber}"
+        }
 
-        else -> error("Not supported")
+        else -> error("Not supported event: $event")
     }
-    core.exportVariable("ref", ref)
     core.exportVariable("version", version)
-
-    return Outputs(
-        fullTag = "v$version"
-    )
 }
 
-suspend fun getLatestVersionAndRef(
+suspend fun getLatestVersion(
     owner: String,
     repo: String,
     token: String,
-): Pair<String, String> {
-    val client = HttpClient(JsEsModule) {
+): String {
+    val client = HttpClient(NodeJsEsModule) {
         install(ContentNegotiation) {
             json(
                 json = Json {
@@ -53,13 +56,12 @@ suspend fun getLatestVersionAndRef(
         bearerAuth(token)
     }.body<Release>()
 
-    val tagName = latestRelease.tag_name
-    val version = tagName.removePrefix("v")
-    val ref = "refs/tags/v$tagName"
-    return ref to "$version.${github.context.runNumber}"
+    val tagName = latestRelease.tagName
+    return tagName.removePrefix("v")
 }
 
 @Serializable
 data class Release(
-    val tag_name: String
+    @SerialName("tag_name")
+    val tagName: String
 )
