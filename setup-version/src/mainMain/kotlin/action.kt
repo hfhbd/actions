@@ -9,12 +9,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-suspend fun action(token: String?) {
-    val version = when (val event = github.context.eventName) {
+suspend fun action(token: String?): Outputs {
+    val (ref, version) = when (val event = github.context.eventName) {
         "release" -> {
             val ref = github.context.ref
             val version = ref.removePrefix("refs/tags/v")
-            version
+            ref to version
         }
 
         "workflow_dispatch" -> {
@@ -24,17 +24,20 @@ suspend fun action(token: String?) {
             } else if (ref.startsWith("refs/tags/v")){
                 ref.removePrefix("refs/tags/v")
             } else error("Not supported ref: $ref")
-            "$version.${github.context.runNumber}"
+            ref to "$version.${github.context.runNumber}"
         }
 
         "schedule" -> {
             val latestVersion = getLatestVersion(github.context.repo.owner, github.context.repo.repo, token ?: github.context.token)
-            "$latestVersion.${github.context.runNumber}"
+            "refs/tags/v$latestVersion" to "$latestVersion.${github.context.runNumber}"
         }
 
         else -> error("Not supported event: $event")
     }
     exportVariable("version", version)
+    return Outputs(
+        ref = ref,
+    )
 }
 
 suspend fun getLatestVersion(
