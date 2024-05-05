@@ -1,3 +1,4 @@
+import actions.core.exportVariable
 import com.github.actions.*
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -8,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-suspend fun action(token: String) {
+suspend fun action(token: String?) {
     val version = when (val event = github.context.eventName) {
         "release" -> {
             val ref = github.context.ref
@@ -19,7 +20,7 @@ suspend fun action(token: String) {
         "workflow_dispatch" -> {
             val ref = github.context.ref
             val version = if (ref.startsWith("refs/heads/main")) {
-                getLatestVersion(github.context.repo.owner, github.context.repo.repo, token)
+                getLatestVersion(github.context.repo.owner, github.context.repo.repo, token ?: github.context.token)
             } else if (ref.startsWith("refs/tags/v")){
                 ref.removePrefix("refs/tags/v")
             } else error("Not supported ref: $ref")
@@ -27,13 +28,13 @@ suspend fun action(token: String) {
         }
 
         "schedule" -> {
-            val latestVersion = getLatestVersion(github.context.repo.owner, github.context.repo.repo, token)
+            val latestVersion = getLatestVersion(github.context.repo.owner, github.context.repo.repo, token ?: github.context.token)
             "$latestVersion.${github.context.runNumber}"
         }
 
         else -> error("Not supported event: $event")
     }
-    core.exportVariable("version", version)
+    exportVariable("version", version)
 }
 
 suspend fun getLatestVersion(
