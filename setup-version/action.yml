@@ -10,6 +10,9 @@
   "outputs": {
     "ref": {
       "description": "The ref"
+    },
+    "version": {
+      "description": "The version"
     }
   },
   "runs": {
