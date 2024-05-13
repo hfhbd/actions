@@ -10,4 +10,4 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 [plugins]
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-actions = { id = "app.softwork.kotlin.actions", version = "0.0.4" }
+kotlin-actions = { id = "app.softwork.kotlin.actions", version = "0.0.5" }
