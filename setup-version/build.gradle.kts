@@ -7,6 +7,7 @@ kotlin {
     sourceSets {
         mainMain {
             dependencies {
+                implementation(libs.kotlin.actions.ktor.engine)
                 implementation(libs.ktor.client.js)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
