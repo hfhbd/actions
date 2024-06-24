@@ -3,7 +3,7 @@
   "inputs": {
     "token": {
       "description": "GitHub Token",
-      "required": false,
+      "required": true,
       "default": "${{ github.token }}"
     }
   },
