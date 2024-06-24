@@ -3,7 +3,8 @@
   "inputs": {
     "token": {
       "description": "GitHub Token",
-      "required": true
+      "required": false,
+      "default": "${{ github.token }}"
     }
   },
   "description": "Export version based on the ref",
