@@ -1,3 +1,4 @@
+import app.softwork.kotlin.actions.JsEsModule
 import com.github.actions.*
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -8,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-suspend fun action(token: String?): Outputs = when (val event = github.context.eventName) {
+suspend fun action(token: String): Outputs = when (val event = github.context.eventName) {
     "release" -> {
         val ref = github.context.ref
         Outputs(ref = ref, version = ref.removePrefix("refs/tags/v"))
@@ -20,7 +21,7 @@ suspend fun action(token: String?): Outputs = when (val event = github.context.e
             getLatestVersion(
                 owner = github.context.repo.owner,
                 repo = github.context.repo.repo,
-                token = token ?: github.context.token,
+                token = token,
             )
         } else if (ref.startsWith("refs/tags/v")) {
             ref.removePrefix("refs/tags/v")
@@ -35,7 +36,7 @@ suspend fun action(token: String?): Outputs = when (val event = github.context.e
         val latestVersion = getLatestVersion(
             owner = github.context.repo.owner,
             repo = github.context.repo.repo,
-            token = token ?: github.context.token,
+            token = token,
         )
         Outputs(
             ref = "refs/tags/v$latestVersion",
@@ -51,7 +52,7 @@ suspend fun getLatestVersion(
     repo: String,
     token: String,
 ): String {
-    val client = HttpClient(NodeJsEsModule) {
+    val client = HttpClient(JsEsModule) {
         install(ContentNegotiation) {
             json(
                 json = Json {

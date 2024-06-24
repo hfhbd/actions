@@ -1,13 +1,15 @@
 [versions]
-kotlin = "2.0.0-RC2"
-ktor = "2.3.10"
+kotlin = "2.0.0"
+ktor = "2.3.11"
+actions = "0.0.5"
 
 [libraries]
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlin-actions-ktor-engine = { module = "app.softwork.kotlin.actions:ktor-engine", version.ref = "actions" }
 
 [plugins]
 kotlin-js = { id = "org.jetbrains.kotlin.js", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-actions = { id = "app.softwork.kotlin.actions", version = "0.0.4" }
+kotlin-actions = { id = "app.softwork.kotlin.actions", version.ref = "actions" }
