@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.0.0"
 ktor = "2.3.12"
-actions = "0.0.9"
+actions = "0.0.11"
 
 [libraries]
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
