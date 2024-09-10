@@ -1,26 +1,27 @@
+import actions.github.context
 import app.softwork.kotlin.actions.JsEsModule
-import com.github.actions.*
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-suspend fun action(token: String): Outputs = when (val event = github.context.eventName) {
+suspend fun action(token: String): Outputs = when (val event = context.eventName) {
     "release" -> {
-        val ref = github.context.ref
+        val ref = context.ref
         Outputs(ref = ref, version = ref.removePrefix("refs/tags/v"))
     }
 
     "workflow_dispatch" -> {
-        val ref = github.context.ref
+        val ref = context.ref
         val version = if (ref.startsWith("refs/heads/main")) {
             getLatestVersion(
-                owner = github.context.repo.owner,
-                repo = github.context.repo.repo,
+                owner = context.repo.owner,
+                repo = context.repo.repo,
                 token = token,
             )
         } else if (ref.startsWith("refs/tags/v")) {
@@ -28,19 +29,19 @@ suspend fun action(token: String): Outputs = when (val event = github.context.ev
         } else error("Not supported ref: $ref")
         Outputs(
             ref = ref,
-            version = "$version.${github.context.runNumber}",
+            version = "$version.${context.runNumber}",
         )
     }
 
     "schedule" -> {
         val latestVersion = getLatestVersion(
-            owner = github.context.repo.owner,
-            repo = github.context.repo.repo,
+            owner = context.repo.owner,
+            repo = context.repo.repo,
             token = token,
         )
         Outputs(
             ref = "refs/tags/v$latestVersion",
-            version = "$latestVersion.${github.context.runNumber}"
+            version = "$latestVersion.${context.runNumber}"
         )
     }
 
@@ -62,10 +63,12 @@ suspend fun getLatestVersion(
             )
         }
         expectSuccess = true
+        defaultRequest {
+            url(context.apiUrl)
+            bearerAuth(token)
+        }
     }
-    val latestRelease = client.get("https://api.github.com/repos/${owner}/${repo}/releases/latest") {
-        bearerAuth(token)
-    }.body<Release>()
+    val latestRelease = client.get("/repos/${owner}/${repo}/releases/latest").body<Release>()
 
     val tagName = latestRelease.tagName
     return tagName.removePrefix("v")
