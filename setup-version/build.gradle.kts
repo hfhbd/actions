@@ -5,7 +5,7 @@ plugins {
 
 kotlin {
     sourceSets {
-        mainMain {
+        jsMain {
             dependencies {
                 implementation(libs.kotlin.actions.ktor.engine)
                 implementation(libs.ktor.client.js)
@@ -13,7 +13,7 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
             }
         }
-        mainTest {
+        jsTest {
             dependencies {
                 implementation(kotlin("test"))
             }
