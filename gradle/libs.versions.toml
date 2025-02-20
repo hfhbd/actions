@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.1.20-Beta2"
+kotlin = "2.1.20-RC"
 ktor = "3.0.3"
 actions = "0.0.17"
 
