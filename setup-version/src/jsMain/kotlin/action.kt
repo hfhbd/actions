@@ -45,7 +45,25 @@ suspend fun action(token: String): Outputs = when (val event = context.eventName
         )
     }
 
+    "push" -> {
+        val latestReleased = getLatestVersion(
+            owner = context.repo.owner,
+            repo = context.repo.repo,
+            token = token,
+        )
+
+        Outputs(
+            ref = context.ref,
+            version = nextSnapshotVersion(latestReleased)
+        )
+    }
+
     else -> error("Not supported event: $event")
+}
+
+internal fun nextSnapshotVersion(latestReleased: String): String {
+    val (major, minor) = latestReleased.split(".").map { it.toInt() }
+    return "$major.${minor + 1}.0-SNAPSHOT"
 }
 
 suspend fun getLatestVersion(
