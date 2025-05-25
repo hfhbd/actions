@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
+
 plugins {
     id("app.softwork.kotlin.actions")
     kotlin("plugin.serialization")
@@ -13,10 +16,15 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
             }
         }
+
         jsTest {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
     }
+}
+
+plugins.withType<NodeJsPlugin> {
+    the<NodeJsEnvSpec>().downloadBaseUrl = null
 }
