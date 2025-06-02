@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 suspend fun action(token: String): Outputs {
-    println(JSON.stringify(context))
+    debug(JSON.stringify(context))
     return when (val event = context.eventName) {
         "release" -> {
             val ref = context.ref
