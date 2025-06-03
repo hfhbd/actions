@@ -20,7 +20,7 @@ suspend fun action(token: String): Outputs {
         "release" -> {
             val tagName: String = context.payload.asDynamic().release.tagName
             val tagRef = "refs/tags/$tagName"
-            Outputs(ref = tagRef, version = tagRef.removePrefix("v"))
+            Outputs(ref = tagRef, version = tagName.removePrefix("v"))
         }
 
         "workflow_dispatch" -> {
