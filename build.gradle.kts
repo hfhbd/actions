@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsPlugin
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 
-plugins.withType<NodeJsPlugin> {
+plugins.withType<NodeJsRootPlugin> {
     the<NodeJsEnvSpec>().downloadBaseUrl = null
 }

@@ -18,8 +18,9 @@ suspend fun action(token: String): Outputs {
     debug(JSON.stringify(context))
     return when (val event = context.eventName) {
         "release" -> {
-            val ref = context.ref
-            Outputs(ref = ref, version = ref.removePrefix("refs/tags/v"))
+            val tagName: String = context.payload.asDynamic().release.tagName
+            val tagRef = "refs/tags/$tagName"
+            Outputs(ref = tagRef, version = tagRef.removePrefix("v"))
         }
 
         "workflow_dispatch" -> {
