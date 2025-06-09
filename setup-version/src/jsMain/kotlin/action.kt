@@ -18,7 +18,7 @@ suspend fun action(token: String): Outputs {
     debug(JSON.stringify(context))
     return when (val event = context.eventName) {
         "release" -> {
-            val tagName: String = context.payload.asDynamic().release.tagName
+            val tagName: String = context.payload.asDynamic().release.tag_name
             val tagRef = "refs/tags/$tagName"
             Outputs(ref = tagRef, version = tagName.removePrefix("v"))
         }
