@@ -1,4 +1,5 @@
 import actions.core.debug
+import actions.core.info
 import actions.github.context
 import app.softwork.kotlin.actions.JsEsModule
 import io.ktor.client.*
@@ -16,11 +17,11 @@ import kotlinx.serialization.json.Json
 
 suspend fun action(token: String): Outputs {
     debug(JSON.stringify(context))
-    return when (val event = context.eventName) {
+    val outputs = when (val event = context.eventName) {
         "release" -> {
-            val tagName: String = context.payload.asDynamic().release.tagName
+            val tagName: String = context.payload.asDynamic().release.tag_name
             val tagRef = "refs/tags/$tagName"
-            Outputs(ref = tagRef, version = tagRef.removePrefix("v"))
+            Outputs(ref = tagRef, version = tagName.removePrefix("v"))
         }
 
         "workflow_dispatch" -> {
@@ -67,6 +68,8 @@ suspend fun action(token: String): Outputs {
 
         else -> error("Not supported event: $event")
     }
+    info("Set version to ${outputs.version} and ref to ${outputs.ref}")
+    return outputs
 }
 
 internal fun nextSnapshotVersion(latestReleased: String): String {
