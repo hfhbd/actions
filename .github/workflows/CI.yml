@@ -18,3 +18,4 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build -x checkmainDist
+      - uses: actions/publish-immutable-action@0.0.3
