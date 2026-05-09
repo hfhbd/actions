@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.3.21"
-ktor = "3.4.1"
+ktor = "3.4.3"
 actions = "0.0.21"
 
 [libraries]
